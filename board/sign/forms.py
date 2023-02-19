@@ -2,27 +2,33 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
 from django import forms
 
+class SignupForm(UserCreationForm): 
+    email = forms.EmailField(max_length=200, help_text='Required') 
+    class Meta: 
+        model = User 
+        fields =('username', 'email', 'password1', 'password2') 
 
-class BaseRegisterForm(UserCreationForm):
-    email = forms.EmailField(label="Email")
 
-    class Meta:
-        model = User
-        fields = ("username",
-                  "email",
-                  "password1",
-                  "password2",)
+# class BaseRegisterForm(UserCreationForm):
+#     email = forms.EmailField(label="Email")
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.request = self.request
-        return form
+#     class Meta:
+#         model = User
+#         fields = ("username",
+#                   "email",
+#                   "password1",
+#                   "password2",)
 
-    def save(self, commit=True):
-        user = super().save(commit=True)
-        basic_group = Group.objects.get(name='common')
-        basic_group.user_set.add(user)
-        return user
+#     def get_form(self, form_class=None):
+#         form = super().get_form(form_class)
+#         form.request = self.request
+#         return form
+
+#     def save(self, commit=True):
+#         user = super().save(commit=True)
+#         basic_group = Group.objects.get(name='common')
+#         basic_group.user_set.add(user)
+#         return user
 
     # def save(self, commit=True):
     #     user = super().save(commit=False)
@@ -30,3 +36,4 @@ class BaseRegisterForm(UserCreationForm):
     #     if commit:
     #         user.save()
     #     return user
+    

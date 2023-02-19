@@ -5,13 +5,8 @@ from datetime import datetime
 from django.urls import reverse, reverse_lazy
 from django.core.cache import cache
 
-from board import settings
 
 # Create your models here.
-
-class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
-    is_activate = models.BooleanField(default=False)
 
 class Categories(models.Model):
     name = models.CharField(max_length=64)

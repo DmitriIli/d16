@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
     'main.apps.MainConfig',
     'sign.apps.SignConfig',
-    
+
 ]
 
 MIDDLEWARE = [
@@ -121,6 +121,11 @@ USE_I18N = True
 USE_TZ = True
 
 
+LOGIN_URL = '/sign/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -138,3 +143,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SITE_ID = 1
 
 AUTH_USER_MODEL = 'auth.User'
+
+EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почты
+EMAIL_PORT = 465  # порт smtp сервера
+EMAIL_HOST_USER = 'softb0x'  # user name
+EMAIL_HOST_PASSWORD = 'rmcarqqzwhtjncbd'
+EMAIL_USE_SSL = True  # Яндекс использует ssl
