@@ -23,7 +23,7 @@ class Ads(models.Model):
     upload = models.FileField(upload_to='media/', blank=True)
 
 
-class FeedBack(models.Model):
+class Reply(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     ads = models.ForeignKey(Ads, on_delete=models.CASCADE)
     time_create = models.DateField(auto_created=True)
