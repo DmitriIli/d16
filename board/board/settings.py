@@ -28,8 +28,7 @@ SECRET_KEY = 'django-insecure-!+^)wus$c(h^mj1d6c(1r!krxk74ruj08q1g#ojc_5*i#$=&vh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['127.0.0.1',]
 
 # Application definition
 
@@ -149,3 +148,5 @@ EMAIL_PORT = 465  # порт smtp сервера
 EMAIL_HOST_USER = 'softb0x'  # user name
 EMAIL_HOST_PASSWORD = 'rmcarqqzwhtjncbd'
 EMAIL_USE_SSL = True  # Яндекс использует ssl
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER +'@yandex.ru'

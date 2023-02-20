@@ -1,0 +1,19 @@
+{% extends "default.html" %}
+
+{% block content %}
+    <hr>
+    {% if request.user.is_authenticated %}
+        {{context.title}}
+        <br>
+        {{context.text}}
+        <br>
+        {{context.category}}
+    {% endif %}
+    <hr>
+    {% if context.author.id == request.user.id %}
+                <a class="nav-item" href="{{context.id}}/edit">Редактировать</a>
+                {% else%}
+                <a class="nav-item" href=#>Ответить</a>
+                {% endif%}
+    <hr>
+{% endblock %}

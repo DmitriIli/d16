@@ -1,0 +1,43 @@
+{% extends 'default.html' %}
+{% block title %}
+<hr>
+{% endblock title %}
+
+{% block content %}
+    
+    {% if request.user.is_authenticated %}
+        {% if not request.user.is_active %}
+            Аккаунт не активирован. Письмо активации отправлено на почту, указанную при регистрации
+        {% else %}
+            <a class="nav-item" href="{% url 'create' %}">Разместить объявление</a>
+            <hr>
+            {% for item in ads %}
+                <a class="nav-item" href="/{{item.id}}">{{item.title}}</a>
+                <br>
+                {{item.text}}
+                <br>
+                {{item.category}}
+                <hr>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+
+    <hr>
+    {% if page_obj.has_previous and page_obj.previous_page_number != 1 %}
+        <a href="?page=1">{{1}}</a>
+        <a href="?page={{page_obj.previous_page_number}}">{{page_obj.previous_page_number}}</a>
+    {% elif page_obj.previous_page_number == 1 %}
+        <a href="?page=1">{{1}}</a>
+    {% endif%}
+    
+    {{page_obj.number}}
+    
+    {% if page_obj.has_next and page_obj.next_page_number != page_obj.paginator.num_pages %}
+        <a href="?page={{page_obj.next_page_number}}">{{page_obj.next_page_number}}</a>
+        <a href="?page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a>
+    {% elif page_obj.next_page_number == page_obj.paginator.num_pages %}
+        <a href="?page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a>
+    {% endif%}
+    
+
+{% endblock content %}

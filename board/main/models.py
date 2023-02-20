@@ -11,13 +11,16 @@ from django.core.cache import cache
 class Categories(models.Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self) -> str:
+        return self.name
+
 class Ads(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    time_create = models.DateTimeField(auto_created=True)
+    time_create = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=64, default=f'заголовок статьи от {datetime.now()}')
     text = models.CharField(max_length=512, default=f'текст статьи от {datetime.now()}')
     category = models.ForeignKey(Categories, on_delete=models.DO_NOTHING)
-    upload = models.FileField(upload_to='media/')
+    upload = models.FileField(upload_to='media/', blank=True)
 
 
 class FeedBack(models.Model):

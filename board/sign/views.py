@@ -4,11 +4,11 @@ from django.views.generic.edit import CreateView
 from .forms import  SignupForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from .token import TokenGenerator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from .token import account_activation_token
 from django.core.mail import EmailMessage
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import get_user_model
 
 
@@ -21,7 +21,6 @@ class BaseRegisterView(CreateView):
 
 def signup(request):
     if request.method == 'POST':
-        account_activation_token = TokenGenerator()
         form = SignupForm(request.POST)
         if form.is_valid():
             # save form in the memory not in database
@@ -42,7 +41,7 @@ def signup(request):
                 mail_subject, message, to=[to_email]
             )
             email.send()
-            return HttpResponse('Please confirm your email address to complete the registration')
+            return HttpResponse('Please confirm your email address to complete the registration') 
     else:
         form = SignupForm()
     return render(request, 'sign/signup.html', {'form': form})
@@ -50,7 +49,7 @@ def signup(request):
 def activate(request, uidb64, token): 
     User = get_user_model() 
     try: 
-        uid = force_text(urlsafe_base64_decode(uidb64)) 
+        uid = force_str(urlsafe_base64_decode(uidb64)) 
         user = User.objects.get(pk=uid) 
     except(TypeError, ValueError, OverflowError, User.DoesNotExist): 
         user = None 
@@ -60,3 +59,4 @@ def activate(request, uidb64, token):
         return HttpResponse('Thank you for your email confirmation. Now you can login your account.') 
     else: 
         return HttpResponse('Activation link is invalid!') 
+

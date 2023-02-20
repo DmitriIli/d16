@@ -79,11 +79,7 @@
 <div class="container">
     <div class="text-center mt-5">
         {% block content %}
-        {% if not equest.user.profile.is_activate %}
-            Аккаунт не активирован. Письмо активации отправлено на почту, указанную при регистрации
-        {% else %}
-            Аккаунт активирован    
-        {% endif %}
+        
         {% endblock content %}
     </div>
 </div>
