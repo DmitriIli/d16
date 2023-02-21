@@ -1,0 +1,16 @@
+{% extends "default.html" %}
+
+{% block content %}
+    <br>
+    {% if request.user.is_authenticated %}
+        {% if not request.user.is_active %}
+            Аккаунт не активирован. Письмо активации отправлено на почту, указанную при регистрации
+        {% else %}
+        <form method="post">{% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Save">
+        </form>
+        {% endif %}
+    {% endif %}
+    <br>
+{% endblock %}

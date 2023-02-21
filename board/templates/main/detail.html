@@ -13,7 +13,7 @@
     {% if context.author.id == request.user.id %}
                 <a class="nav-item" href="{{context.id}}/edit">Редактировать</a>
                 {% else%}
-                <a class="nav-item" href=#>Ответить</a>
+                <a class="nav-item" href="{{context.id}}/reply">Ответить</a>
                 {% endif%}
     <hr>
 {% endblock %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView
-from .forms import  SignupForm
+from .forms import SignupForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -10,13 +10,15 @@ from .token import account_activation_token
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import get_user_model
+from django.views.generic import DeleteView
+from main.models import Reply
+from main.utils import *
 
 
 class BaseRegisterView(CreateView):
     model = User
     form_class = SignupForm
     success_url = '/sign/login/'
-    
 
 
 def signup(request):
@@ -41,22 +43,36 @@ def signup(request):
                 mail_subject, message, to=[to_email]
             )
             email.send()
-            return HttpResponse('Please confirm your email address to complete the registration') 
+            return HttpResponse('Please confirm your email address to complete the registration')
     else:
         form = SignupForm()
     return render(request, 'sign/signup.html', {'form': form})
 
-def activate(request, uidb64, token): 
-    User = get_user_model() 
-    try: 
-        uid = force_str(urlsafe_base64_decode(uidb64)) 
-        user = User.objects.get(pk=uid) 
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist): 
-        user = None 
-    if user is not None and account_activation_token.check_token(user, token): 
-        user.is_active = True 
-        user.save() 
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.') 
-    else: 
-        return HttpResponse('Activation link is invalid!') 
 
+def activate(request, uidb64, token):
+    User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
+
+
+def protect(request, name):
+    # reply_list = Reply.objects.filter(ads__author=request.user)
+    reply_list = Reply.objects.filter(ads__author=request.user).select_related(
+        'ads').select_related('author').values('author', 'text', 'time_create', 'id', 'ads__title', 'author__username')
+    print(reply_list)
+    return render(request, 'main/protect.html', {'list': reply_list},)
+
+
+class ReplyDelete(DeleteView):
+    model = Reply
+    success_url = '/sign/protect/{{ruquest.user}}'
+    template_name = 'main/delete.html'

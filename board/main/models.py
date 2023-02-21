@@ -26,5 +26,5 @@ class Ads(models.Model):
 class Reply(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     ads = models.ForeignKey(Ads, on_delete=models.CASCADE)
-    time_create = models.DateField(auto_created=True)
+    time_create = models.DateField(auto_now_add=True)
     text = models.CharField(max_length=256, default=f'текст отклика от {datetime.now()}')

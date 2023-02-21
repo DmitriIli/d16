@@ -14,6 +14,9 @@ class CreateForm(ModelForm):
 
 
 class CreateReplyForm(ModelForm):
+    text = forms.CharField(widget=forms.Textarea,
+                           max_length=512, help_text='Текст ответа')
+
     class Meta:
         model = Reply
-        fields = ['author', 'text',]
+        fields = ['text',]

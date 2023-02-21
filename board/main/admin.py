@@ -5,7 +5,7 @@ from .models import *
 
 # admin.site.register(Categories)
 admin.site.register(Ads)
-admin.site.register(FeedBack)
+admin.site.register(Reply)
 
 @admin.register(Categories)
 class CategoriesAdmin(admin.ModelAdmin):

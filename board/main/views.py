@@ -50,26 +50,11 @@ class ReplyOnAds(CreateView):
     raise_exception = True
 
     def post(self, request, *args, **kwargs):
-        form = PostForm(request.POST)
+        form = CreateReplyForm(request.POST)
         if form.is_valid():
             instance = form.save(commit=False)
-            instance.post_author = self.request.user
+            instance.ads = Ads.objects.get(pk=kwargs['pk'])
+            instance.author = request.user
             instance.save()
-            return HttpResponseRedirect(......)
-        return render(request, 'news/create_post.html', {'form': form})
-
-# class PostCreateView(PermissionRequiredMixin, CreateView):
-#     template_name = 'news/create_post.html'
-#     form_class = PostForm
-#     permission_required = ('news.add_post')
-#     raise_exception = True
-
-#     # Функция для кастомной валидации полей формы модели
-#     def form_valid(self, form):
-#         # создаем форму, но не отправляем его в БД, пока просто держим в памяти
-#         fields = form.save(commit=False)
-#         # Через реквест передаем недостающую форму, которая обязательна
-#         fields.post_author = Author.objects.get(author=self.request.user)
-#         # Наконец сохраняем в БД
-#         fields.save()
-#         return super().form_valid(form)
+            return redirect('/')
+        return render(request, 'main/reply.html', {'form': form})

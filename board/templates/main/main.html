@@ -12,11 +12,13 @@
             <a class="nav-item" href="{% url 'create' %}">Разместить объявление</a>
             <hr>
             {% for item in ads %}
-                <a class="nav-item" href="/{{item.id}}">{{item.title}}</a>
+                Заголовок стать: <a class="nav-item" href="/{{item.id}}">{{item.title}}</a>
                 <br>
-                {{item.text}}
+                Автор статьи: {{item.author}}
                 <br>
-                {{item.category}}
+                Текст статьи: {{item.text}}
+                <br>
+                Категория: {{item.category}}
                 <hr>
             {% endfor %}
         {% endif %}
