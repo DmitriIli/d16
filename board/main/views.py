@@ -3,7 +3,7 @@ from board.settings import BASE_DIR
 from django.core.paginator import Paginator
 from .forms import CreateForm, CreateReplyForm
 from .models import Ads, Reply
-from django.views.generic import UpdateView, DetailView, CreateView, UpdateView
+from django.views.generic import UpdateView, DetailView, CreateView, UpdateView, DeleteView
 # Create your views here.
 
 
@@ -58,3 +58,19 @@ class ReplyOnAds(CreateView):
             instance.save()
             return redirect('/')
         return render(request, 'main/reply.html', {'form': form})
+
+def reply(request):
+    ...
+
+def user_page(request, name):
+    # reply_list = Reply.objects.filter(ads__author=request.user)
+    reply_list = Reply.objects.filter(ads__author=request.user).select_related(
+        'ads').select_related('author').values('author', 'text', 'time_create', 'id', 'ads__title', 'author__username')
+    print(reply_list)
+    return render(request, 'main/user.html', {'list': reply_list},)
+
+
+class ReplyDelete(DeleteView):
+    model = Reply
+    success_url = '/main/{{ruquest.user}}'
+    template_name = 'main/delete.html'

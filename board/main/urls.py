@@ -7,4 +7,6 @@ urlpatterns = [
     path('<int:pk>', DetailAds.as_view(), name='detail'),
     path('<int:pk>/edit', UpdateAds.as_view(), name='edit'),
     path('<int:pk>/reply', ReplyOnAds.as_view(), name='reply'),
+    path('<str:name>', user_page, name='userpages'),
+    path('<str:name>/<int:pk>/delete', ReplyDelete.as_view(), name='delete'),
 ]

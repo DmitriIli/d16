@@ -8,10 +8,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .token import account_activation_token
 from django.core.mail import EmailMessage
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth import get_user_model
-from django.views.generic import DeleteView
-from main.models import Reply
 from main.utils import *
 
 
@@ -63,16 +61,3 @@ def activate(request, uidb64, token):
     else:
         return HttpResponse('Activation link is invalid!')
 
-
-def protect(request, name):
-    # reply_list = Reply.objects.filter(ads__author=request.user)
-    reply_list = Reply.objects.filter(ads__author=request.user).select_related(
-        'ads').select_related('author').values('author', 'text', 'time_create', 'id', 'ads__title', 'author__username')
-    print(reply_list)
-    return render(request, 'main/protect.html', {'list': reply_list},)
-
-
-class ReplyDelete(DeleteView):
-    model = Reply
-    success_url = '/sign/protect/{{ruquest.user}}'
-    template_name = 'main/delete.html'
