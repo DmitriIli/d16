@@ -8,5 +8,6 @@ urlpatterns = [
     path('<int:pk>/edit', UpdateAds.as_view(), name='edit'),
     path('<int:pk>/reply', ReplyOnAds.as_view(), name='reply'),
     path('<str:name>', user_page, name='userpages'),
-    path('<str:name>/<int:pk>/delete', ReplyDelete.as_view(), name='delete'),
+    path('<str:name>/<int:pk>/delete', ReplyDelete.as_view(), name='reply_delete'),
+    path('<str:name>/<int:pk>/agry', reply_agry, name='reply_agry'),
 ]

@@ -1,0 +1,22 @@
+{% extends "default.html" %}
+
+{% block content %}
+    <form method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+    {% for item in filter.qs %}
+        <hr>
+        Автор ответа: {{item.author__username}}
+        <br>
+        Текст ответа: {{item.text}}
+        <br>
+        Дата публикации: {{item.time_create}}
+        <br>
+        Заголовок статьи: {{item.ads__title}}
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href='{{request.user}}/{{item.id}}/agry'>Принять</a></li>
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href='{{request.user}}/{{item.id}}/delete'>Удалить</a></li>
+        <hr>
+    {% endfor %}
+
+{% endblock %}

@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from board.settings import BASE_DIR
 from django.core.paginator import Paginator
+from django.views.generic import UpdateView, DetailView, CreateView, UpdateView, DeleteView
+from django.core.mail import send_mail
 from .forms import CreateForm, CreateReplyForm
 from .models import Ads, Reply
-from django.views.generic import UpdateView, DetailView, CreateView, UpdateView, DeleteView
+from .filters import ReplyFilter
 # Create your views here.
 
 
@@ -59,14 +61,28 @@ class ReplyOnAds(CreateView):
             return redirect('/')
         return render(request, 'main/reply.html', {'form': form})
 
-def reply(request):
-    ...
+
+def reply_agry(request, pk, name):
+    email_list = []
+    reply = Reply.objects.filter(pk=pk).select_related('author').select_related('user').values('text','author__username', 'author__email')
+    email_list.append(reply.first().get('author__email'))
+    reply_author = reply.first().get('author__username')
+    send_mail(
+        f'Приветсвую тебя {reply_author}',
+        f'На твой отзыв получен ответ',
+        'softb0x@yandex.ru',
+        email_list,
+        fail_silently=False,
+    )
+    return (redirect('/'))
+
 
 def user_page(request, name):
-    # reply_list = Reply.objects.filter(ads__author=request.user)
     reply_list = Reply.objects.filter(ads__author=request.user).select_related(
         'ads').select_related('author').values('author', 'text', 'time_create', 'id', 'ads__title', 'author__username')
-    return render(request, 'main/user.html', {'list': reply_list},)
+    f = ReplyFilter(request.GET, queryset=reply_list)
+    # return render(request, 'main/user.html', {'list': reply_list},)
+    return render(request, 'main/filter.html', {'filter': f},)
 
 
 class ReplyDelete(DeleteView):
