@@ -10,26 +10,29 @@ def create_reply(sender, instance, created, **kwargs):
 
     if created:
         email_list = []
-        reply = Reply.objects.filter(pk=instance.id).select_related('ads').select_related('author').values('author__username', )
+        reply_author = Reply.objects.filter(pk=instance.id).select_related(
+            'author').select_related('user').values('text', 'author__username', 'author__email')
+        reply_ads_author = Reply.objects.filter(pk=instance.id).select_related(
+            'ads').select_related('author').select_related('user').values('ads__author__username','ads__title')
+        
+        print(dict(reply_author))
+        
+        # email_list.append(str(instance.email))
+        # html_content = render_to_string(
+        #     'news/notify.html',
+        #     {
+        #         'instance': instance,
+        #     }
+        # )
 
+        # msg = EmailMultiAlternatives(
+        #     subject=f'Приветсвую тебя {instance.username}',
+        #     body=f'Приветсвенное письмо для нового пользователя {instance.username}',
+        #     from_email='softb0x@yandex.ru',
+        #     to=email_list,
+        # )
+        # msg.attach_alternative(html_content, "text/html")  # добавляем html
 
-
-        email_list.append(str(instance.email))
-        html_content = render_to_string(
-            'news/notify.html',
-            {
-                'instance': instance,
-            }
-        )
-
-        msg = EmailMultiAlternatives(
-            subject=f'Приветсвую тебя {instance.username}',
-            body=f'Приветсвенное письмо для нового пользователя {instance.username}',
-            from_email='softb0x@yandex.ru',
-            to=email_list,
-        )
-        msg.attach_alternative(html_content, "text/html")  # добавляем html
-
-        msg.send()  # отсылаем
+        # msg.send()  # отсылаем
 
     return redirect('/')

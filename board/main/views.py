@@ -9,7 +9,7 @@ from django.views.generic import UpdateView, DetailView, CreateView, UpdateView,
 
 def mainview(request):
     ads = Ads.objects.all()
-    paginator = Paginator(ads, 2)
+    paginator = Paginator(ads, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {'ads': ads, 'page_obj': page_obj, }
@@ -66,7 +66,6 @@ def user_page(request, name):
     # reply_list = Reply.objects.filter(ads__author=request.user)
     reply_list = Reply.objects.filter(ads__author=request.user).select_related(
         'ads').select_related('author').values('author', 'text', 'time_create', 'id', 'ads__title', 'author__username')
-    print(reply_list)
     return render(request, 'main/user.html', {'list': reply_list},)
 
 
