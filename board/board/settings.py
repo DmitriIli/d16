@@ -149,4 +149,10 @@ EMAIL_HOST_USER = 'softb0x'  # user name
 EMAIL_HOST_PASSWORD = 'rmcarqqzwhtjncbd'
 EMAIL_USE_SSL = True  # Яндекс использует ssl
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER +'@yandex.ru'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru'
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

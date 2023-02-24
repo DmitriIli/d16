@@ -6,6 +6,9 @@ from django.core.mail import send_mail
 from .forms import CreateForm, CreateReplyForm
 from .models import Ads, Reply
 from .filters import ReplyFilter
+from .tasks import send_mail_reply_agry
+
+
 # Create your views here.
 
 
@@ -64,16 +67,18 @@ class ReplyOnAds(CreateView):
 
 def reply_agry(request, pk, name):
     email_list = []
-    reply = Reply.objects.filter(pk=pk).select_related('author').select_related('user').values('text','author__username', 'author__email')
+    reply = Reply.objects.filter(pk=pk).select_related('author').select_related(
+        'user').values('text', 'author__username', 'author__email')
     email_list.append(reply.first().get('author__email'))
     reply_author = reply.first().get('author__username')
-    send_mail(
-        f'Приветсвую тебя {reply_author}',
-        f'На твой отзыв получен ответ',
-        'softb0x@yandex.ru',
-        email_list,
-        fail_silently=False,
-    )
+    send_mail_reply_agry.delay(email_list = email_list, recipient = reply_author)
+    # send_mail(
+    #     f'Приветсвую тебя {reply_author}',
+    #     f'На твой отзыв получен ответ',
+    #     'softb0x@yandex.ru',
+    #     email_list,
+    #     fail_silently=False,
+    # )
     return (redirect('/'))
 
 
